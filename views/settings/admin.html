@@ -1,0 +1,75 @@
+{{extend '../_layouts/home.html'}}
+
+{{block 'title'}}{{'多人博客 - 首页'}}{{/block}}
+
+{{block 'body'}}
+<section class="container">
+  <div class="col-md-5">
+    <div class="subhead">
+      <h2>修改密码</h2>
+    </div>
+    <hr>
+    <form id="admin">
+      {{ if user }}
+      <div class="form-group">
+        <label for="exampleInputPassword1">账号</label>
+        <input type="text" class="form-control" name='email' value="{{ user.email }}" placeholder="{{ user.email }}">
+      </div>
+      {{ else }}
+      <div class="form-group">
+          <label for="exampleInputPassword1">账号</label>
+          <input type="text" class="form-control" name='email' >
+      </div>
+      {{ /if }}
+      <div class="form-group">
+        <label for="exampleInputPassword1">旧密码</label>
+        <input type="password" class="form-control" name='password'>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">新密码</label>
+        <input type="password" class="form-control" name='newpassword'>
+      </div>
+      <!-- <div class="form-group">
+        <label for="exampleInputPassword1">确认密码</label>
+        <input type="password" class="form-control" name>
+      </div> -->
+      <button type="submit" class="btn btn-success">保存</button>
+    </form>
+    <div class="subhead">
+      <h2>注销账号</h2>
+      <hr>
+    </div>
+    <div>
+      <p>一旦注销，不可找回，请谨慎操作</p>
+      <button class="btn btn-danger">删除</button>
+    </div>
+    <hr>
+  </div>
+</section>
+
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script>
+  $(function(){
+    $('#admin').on('submit',function(e){
+      e.preventDefault()
+      var formData = $(this).serialize()
+      $.ajax({
+        url: '/admin',
+        type: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function(data){
+          var code = data.err_code
+          if(code === 0){
+            window.location.href = '/login'
+          }else if(code === 1){
+            alert('邮箱或密码有误')
+          }else {
+            alert('服务器繁忙，请稍等')
+          }
+        }
+      })
+    })
+  })
+</script>
+{{/block}}

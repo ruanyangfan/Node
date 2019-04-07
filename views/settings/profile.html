@@ -1,0 +1,63 @@
+{{extend '../_layouts/home.html'}}
+
+{{block 'title'}}{{'多人博客 - 首页'}}{{/block}}
+
+{{block 'body'}}
+<section class="container">
+  {{include '../_partials/settings-nav.html'}}
+  <div class="col-md-5">
+    <form id = 'form_info'>
+      <div class="form-group">
+        <label for="exampleInputEmail1">账号</label>
+        <p class="form-control-static">{{ user.email }}</p>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">昵称</label>
+        <input type="text" class="form-control" placeholder="" name='nickname'>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">介绍</label>
+        <textarea class="form-control" rows="3" name='introduce'></textarea>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">性别</label>
+        <div>
+          <label class="radio-inline">
+            <input type="radio" name="sex"  value="0"> 男
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="sex"  value="1"> 女
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">生日</label>
+        <input type="text" class="form-control" name='birth'>
+      </div>
+      <button type="submit" class="btn btn-success">保存</button>
+    </form>
+  </div>
+</section>
+<script src="/node_modules/jquery/dist/jquery.js"></script>
+<script>
+    $('#form_info').on('submit',function(e){
+      e.preventDefault()
+      var formData = $(this).serialize()
+      $.ajax({
+        url: '/profile',
+        type: 'post',
+        data: formData,
+        dataType: 'json',
+        success: function(data){
+          var code = data.err_code
+          if(code === 500){
+            window.alert('服务器繁忙')
+          }else{
+            window.location.href='/'
+          }
+        }
+      })
+    })
+</script>
+{{/block}}
+
